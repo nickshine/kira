@@ -1,0 +1,39 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: kira
+  labels:
+    app: kira
+spec:
+  type: NodePort
+  ports:
+    - port: 8080
+      protocol: TCP
+      targetPort: 80
+      nodePort: 31119
+  selector:
+    app: kira
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: kira
+  labels:
+    app: kira
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: kira
+  template:
+    metadata:
+      labels:
+        app: kira
+    spec:
+      containers:
+      - name: kira
+        image: nshine/kira:arm32v6-latest
+        ports:
+        - containerPort: 80
+        imagePullPolicy: Always
+
